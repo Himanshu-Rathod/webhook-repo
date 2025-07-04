@@ -8,6 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 # MongoDB Connection
+# Replace the string below with your own MongoDB connection string
 client = MongoClient("mongodb+srv://myuser:MyBDpass@cluster0.ro9pjcp.mongodb.net/github_events?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true")
 db = client.github_events
 collection = db.events
