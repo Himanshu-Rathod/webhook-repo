@@ -18,9 +18,6 @@ def webhook():
     data = request.json
     event_type = request.headers.get('X-GitHub-Event')
 
-    print("📩 GitHub Event Type:", event_type)
-    print("📩 Payload received:", data)
-
     if event_type == "push":
         info = {
             "author": data['pusher']['name'],
