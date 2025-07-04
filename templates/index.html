@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub Webhook Events</title>
+  <style>
+    :root {
+      --primary: #034272;
+      --accent: #ECC232;
+      --bg: #f9f9f9;
+      --text: #333;
+      --card-bg: white;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+    }
+
+    header {
+      background-color: var(--primary);
+      padding: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .title {
+      flex-grow: 1;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .theme-btn {
+      background-color: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 12px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: auto;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .event-card {
+      background: var(--card-bg);
+      border-left: 5px solid var(--accent);
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #353434;
+      margin-top: 40px;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="theme-btn" onclick="cycleTheme()"> Theme</button>
+    <div class="title"> GitHub Webhook Event Viewer</div>
+  </header>
+
+  <div class="container" id="events">
+    <!-- Events will load here -->
+  </div>
+
+  <footer>
+    Built by Himanshu Rathod · Refreshes every 15 seconds
+  </footer>
+
+  <script>
+    async function fetchEvents() {
+      const response = await fetch('http://127.0.0.1:5000/events');
+      const data = await response.json();
+      const container = document.getElementById('events');
+      container.innerHTML = '';
+
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'event-card';
+
+        const p = document.createElement('p');
+        p.textContent = item;
+
+        card.appendChild(p);
+        container.appendChild(card);
+      });
+    }
+
+    fetchEvents();
+    setInterval(fetchEvents, 15000);
+
+    // Theme changer
+    let currentTheme = 0;
+    const themes = [
+      {
+        '--primary': '#034272',
+        '--accent': '#ECC232',
+        '--bg': '#f9f9f9',
+        '--text': '#333',
+        '--card-bg': '#ffffff',
+      },
+      {
+        '--primary': '#2E073F',
+        '--accent': '#AD49E1',
+        '--bg': '#EBD3F8',
+        '--text': '#7A1CAC',
+        '--card-bg': '#ffffff',
+      },
+      {
+        '--primary': '#A4DD00',
+        '--accent': '#FFFADC',
+        '--bg': '#FFFADC',
+        '--text': '#2E2E2E',
+        '--card-bg': '#ffffff',
+      },
+      {
+        '--primary': '#000000',
+        '--accent': '#A2D5C6',
+        '--bg': '#F6F6F6',
+        '--text': '#000000',
+        '--card-bg': '#CFFFE2',
+      },
+      {
+        '--primary': '#1F2833',
+        '--accent': '#66FCF1',
+        '--bg': '#C5C6C7',
+        '--text': '#45A29E',
+        '--card-bg': '#ffffff',
+      }
+    ];
+
+    function cycleTheme() {
+      currentTheme = (currentTheme + 1) % themes.length;
+      const theme = themes[currentTheme];
+      for (let key in theme) {
+        document.documentElement.style.setProperty(key, theme[key]);
+      }
+    }
+  </script>
+</body>
+</html>
